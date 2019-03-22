@@ -49,3 +49,16 @@ app.listen(8003,function(){
 
 
 
+        //   function merge(arr) {
+        //     if (!Array.isArray(arr) || arr.length == 0) return [];
+        //     var ret = [];
+          
+        //     for (var i = 0; i < arr.length; i++) {
+        //       // 或者 ret.indexOf(arr[i] == -1)
+        //         if (arr.indexOf(arr[i]) == i) {
+        //           ret.push(arr[i]);
+        //       }
+        //     }
+            
+        //     return ret;
+        //   }
