@@ -20,7 +20,7 @@ router.get('/',async (ctx,next)=>{
   let sql = 'SELECT * FROM productlist'
 
   let list = await SQL.mySql(sql,[])
-  // console.log(list)
+
   ctx.render('admin/product/index',{list})
 
 })
@@ -38,14 +38,6 @@ router.get('/productedit',async(ctx,next)=>{
   console.log(results)
   ctx.render('admin/product/productedit',{data: results[0]})
   
-  // SQL._connectDb(sql,[id],function(results, fields){
-
-  //   console.log('编辑商品',results)
-
-  //   ctx.render('admin/product/productedit',{
-  //     data: results[0]
-  //   })
-  // })
 })
 
 router.post('/doEdit',async(ctx,next)=>{
