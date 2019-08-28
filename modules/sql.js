@@ -19,7 +19,6 @@ function _connectDb(sql,data,callback) {
     }
     
     callback(results, fields)
-   
   })
   connection.end()
 
@@ -36,8 +35,6 @@ function _connectSqlOne(sql,callback) {
     if(callback){
       callback(results, fields)
     }
-
-   
 
   })
   connection.end()

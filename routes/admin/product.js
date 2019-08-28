@@ -2,7 +2,7 @@ var Router = require('koa-router');
 const router = new Router();
 var fs = require("fs")
 
-const render = require('koa-views-render');
+// const render = require('koa-views-render');
 
 var session = require('express-session');
 //图片上传
@@ -42,11 +42,12 @@ router.get('/productedit',async(ctx,next)=>{
 
 router.post('/doEdit',async(ctx,next)=>{
   await next()
-    
+  console.log('ctx',ctx)
+  let mainCtx = ctx
   var form = new multiparty.Form()
   form.uploadDir = 'upload'
 
-  form.parse(req,function(err,fields,files){
+  await form.parse(ctx.req,function(err,fields,files){
 
     console.log(fields) //获取表单数据
 
@@ -78,7 +79,7 @@ router.post('/doEdit',async(ctx,next)=>{
         console.log('文件:'+pic+'删除成功！');
       })
       var sql = 'UPDATE productlist SET title=?,price=?,fee=?,description=? WHERE _id=?'
-      var data = [ 
+      var data = [
         title,
         price,
         fee,
@@ -88,30 +89,37 @@ router.post('/doEdit',async(ctx,next)=>{
 
     
     
-  
-    SQL._connectDb(sql,data,function(results, fields){
-  
-      ctx.redirect('/admin/product')
+    SQL.mySql(sql,data).then(res=>{
+      // console.log('跳  ')
+     
 
     })
+    // SQL._connectDb(sql,data,function(results, fields){
+      
+    //   ctx.redirect('/product')
+
+    // })
 
 
 
   })
+  await mainCtx.redirect('/product')
 
 })
 
 
 
 router.get('/productadd',async(ctx,next)=>{
+  await next()
   ctx.render('admin/product/productadd')
 })
 
 router.post('/doProductAdd',async(ctx,next)=>{
+  await next()
   var form = new multiparty.Form()
   form.uploadDir = 'upload'
   
-  form.parse(req,function(err,fields,files){
+  await form.parse(ctx.req,function(err,fields,files){
 
     let title = fields.title[0]
     let price = fields.price[0]
@@ -133,36 +141,28 @@ router.post('/doProductAdd',async(ctx,next)=>{
       var sql = 'INSERT INTO productlist(title,price,fee,description,pic,_id) VALUES (?,?,?,?,?,?)'
       var data = [title,price,fee,description,pic,nowId]
 
-       SQL._connectDb(sql,data,function(results, fields){
-  
-        ctx.redirect('/admin/product')
-  
-      })
+      SQL.mySql(sql,data)
 
 
      })
 
 
   })
+
+  await ctx.redirect('/product')
 })
 
 
  //z增加商品
 router.get('/productDel',async(ctx,next)=>{
-
+  await next()
   var sql = 'DELETE FROM productlist WHERE _id=?'
   var id = ctx.query.id;
-
-  SQL._connectDb(sql,[id],function(results, fields){
-    // res.send(`<script>var truthBeTold = window.confirm('确定删除？');
-    // if(truthBeTold){
-    //   location.href = '/admin/product'
-    // }else{
-    //   location.href = '/admin/product'
-    // }
-    // </script>`)
-    ctx.redirect('/admin/product')
-  })
+  await SQL.mySql(sql,[id])
+  await ctx.redirect('/product')
+  // SQL._connectDb(sql,[id],function(results, fields){
+  //   ctx.redirect('/admin/product')
+  // })
 })
 
 
